@@ -45,7 +45,8 @@ class UploadCommand(Command):
             pass
 
         self.status('Building Source and Wheel (universal) distribution…')
-        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+        os.system(
+            '{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
 
         self.status('Uploading the package to PyPI via Twine…')
         os.system('twine upload dist/*')
@@ -63,6 +64,8 @@ setup(name=NAME,
       classifiers=['Development Status :: 4 - Beta',
                    'Operating System :: POSIX :: Linux',
                    'Programming Language :: Python :: 3',
+                   'Programming Language :: Python :: 2.6',
+                   'Programming Language :: Python :: 2.7',
                    ],
       long_description=open('README.md').read(),
       url=URL,
