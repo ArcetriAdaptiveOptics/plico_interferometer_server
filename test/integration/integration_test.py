@@ -76,6 +76,19 @@ class IntegrationTest(unittest.TestCase):
     def tearDown(self):
         TestHelper.dumpFileToStdout(self.SERVER_LOG_PATH)
 
+        try:
+            server1_log_path = os.path.join(
+                self.LOG_DIR, "%s.log" % Constants.SERVER_1_CONFIG_SECTION)
+            TestHelper.dumpFileToStdout(server1_log_path)
+        except Exception:
+            pass
+        try:
+            server2_log_path = os.path.join(
+                self.LOG_DIR, "%s.log" % Constants.SERVER_1_CONFIG_SECTION)
+            TestHelper.dumpFileToStdout(server2_log_path)
+        except Exception:
+            pass
+
         if self.server is not None:
             TestHelper.terminateSubprocess(self.server)
 
