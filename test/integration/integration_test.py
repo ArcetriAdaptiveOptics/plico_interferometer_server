@@ -23,12 +23,10 @@ from plico_interferometer.client.interferometer_client import \
     InterferometerClient
 from plico_interferometer.client.snapshot_entry import SnapshotEntry
 from plico_interferometer_server.controller.runner import Runner
-from plico_interferometer_server.devices.abstract_interferometer import \
-    InterferometerException
 
 
-# @unittest.skipIf(sys.platform == "win32",
-#                 "Integration test doesn't run on Windows. Fix it!")
+@unittest.skipIf(sys.platform == "win32",
+                 "Integration test doesn't run on Windows. Fix it!")
 class IntegrationTest(unittest.TestCase):
 
     TEST_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)),
