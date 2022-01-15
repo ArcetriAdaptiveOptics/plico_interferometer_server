@@ -58,13 +58,43 @@ class UploadCommand(Command):
         sys.exit()
 
 
+class InstallWykoCommand(Command):
+    """Support setup.py install_wyko"""
+
+    description = 'Install pyro server on 4sight2.23 for the Wyko4100'
+    user_options = []
+
+    @staticmethod
+    def status(s):
+        """Prints things in bold."""
+        print('\033[1m{0}\033[0m'.format(s))
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        self.status(self.description)
+        self.status('Installing pyro in current python environment')
+        os.chdir(os.path.join('archive_for_wyko', 'Pyro-3.6'))
+        os.system('python setup.py install')
+        os.chdir(here)
+        self.status(
+            'Installing 3rd part modules in C:\Program Files\4sight2.23\scripts\site_packages')
+        self.status(
+            'Installing pyro server startup script in C:\Program Files\4sight2.23\scripts')
+
+        sys.exit()
+
+
 setup(name=NAME,
       description=DESCRIPTION,
       version=about['__version__'],
       classifiers=['Development Status :: 4 - Beta',
                    'Operating System :: POSIX :: Linux',
                    'Programming Language :: Python :: 3',
-                   'Programming Language :: Python :: 2.6',
                    'Programming Language :: Python :: 2.7',
                    ],
       long_description=open('README.md').read(),
@@ -76,6 +106,7 @@ setup(name=NAME,
       packages=['plico_interferometer_server',
                 'plico_interferometer_server.controller',
                 'plico_interferometer_server.devices',
+                'plico_interferometer_server.i4sight223',
                 'plico_interferometer_server.process_monitor',
                 'plico_interferometer_server.scripts',
                 'plico_interferometer_server.utils',
@@ -99,5 +130,5 @@ setup(name=NAME,
                         ],
       include_package_data=True,
       test_suite='test',
-      cmdclass={'upload': UploadCommand, },
+      cmdclass={'upload': UploadCommand, 'install_wyko': InstallWykoCommand, },
       )
