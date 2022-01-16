@@ -11,7 +11,7 @@ sys.path.append('C:\Program Files\\4Sight2.23\scripts\site-packages')
 
 
 # Create the Server
-from I4D import Server
+from i4sight223 import Server
 wyko_server = Server.Server()
 
 # Start the Server
@@ -21,8 +21,8 @@ print('I4D Pyro Server Daemon started !')
 
 
 # Test the Controller
-#from I4D import Controller
-# print 'Testing I4D Controller...'
-#controller = Controller.Controller()
-# controller.testAcquire()
-# print 'I4D Controller tested!'
+# from i4sight223 import Controller
+# print('Testing I4D Controller...')
+# controller = Controller.Controller()
+# wf=controller.wavefront()
+# print('I4D Controller tested!')

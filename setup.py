@@ -39,19 +39,19 @@ class UploadCommand(Command):
 
     def run(self):
         try:
-            self.status('Removing previous builds…')
+            self.status('Removing previous builds...')
             rmtree(os.path.join(here, 'dist'))
         except OSError:
             pass
 
-        self.status('Building Source and Wheel (universal) distribution…')
+        self.status('Building Source and Wheel (universal) distribution...')
         os.system(
             '{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
 
-        self.status('Uploading the package to PyPI via Twine…')
+        self.status('Uploading the package to PyPI via Twine...')
         os.system('twine upload dist/*')
 
-        self.status('Pushing git tags…')
+        self.status('Pushing git tags...')
         os.system('git tag v{0}'.format(about['__version__']))
         os.system('git push --tags')
 
@@ -61,13 +61,12 @@ class UploadCommand(Command):
 class InstallWykoCommand(Command):
     """Support setup.py install_wyko"""
 
-    description = 'Install pyro server on 4sight2.23 for the Wyko4100'
+    description = 'Install files needed to communicate with Wyko4100 4sight2.23 via Pyro'
     user_options = []
 
     @staticmethod
     def status(s):
-        """Prints things in bold."""
-        print('\033[1m{0}\033[0m'.format(s))
+        print(s)
 
     def initialize_options(self):
         pass
@@ -77,14 +76,39 @@ class InstallWykoCommand(Command):
 
     def run(self):
         self.status(self.description)
+        root_dest = os.path.join('C:', os.sep, 'Program Files', '4sight2.23')
+        print('4sight root folder is: %s' % root_dest)
         self.status('Installing pyro in current python environment')
         os.chdir(os.path.join('archive_for_wyko', 'Pyro-3.6'))
         os.system('python setup.py install')
         os.chdir(here)
+
+        site_package_dest = os.path.join(root_dest, 'scripts', 'site-packages')
         self.status(
-            'Installing 3rd part modules in C:\Program Files\4sight2.23\scripts\site_packages')
+            'Installing 3rd part modules in %s' % site_package_dest)
+        self.copy_tree(
+            os.path.join('archive_for_wyko', 'Pyro-3.6', 'Pyro'),
+            os.path.join(site_package_dest, 'Pyro'))
+        self.copy_tree(
+            os.path.join('archive_for_wyko', 'site-packages'),
+            os.path.join(site_package_dest))
+        self.copy_tree(
+            os.path.join('plico_interferometer_server', 'i4sight223'),
+            os.path.join(site_package_dest, 'i4sight223'))
+
+        script_dest = os.path.join(root_dest, 'scripts')
         self.status(
-            'Installing pyro server startup script in C:\Program Files\4sight2.23\scripts')
+            'Installing pyro server startup script in %s' % script_dest)
+        self.copy_file(os.path.join('archive_for_wyko',
+                                    'ServerStartup.py'), script_dest)
+
+        self.status('Installing Pyro.conf in %s' % root_dest)
+        self.copy_file(os.path.join(
+            'archive_for_wyko', 'Pyro.conf'), root_dest)
+
+        pyro_dir = os.path.join('C:', os.sep, '4D', 'Pyro')
+        self.status('Creating folder %s' % pyro_dir)
+        self.mkpath(pyro_dir)
 
         sys.exit()
 
