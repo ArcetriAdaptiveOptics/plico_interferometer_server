@@ -8,7 +8,7 @@ from distutils.core import setup
 import sys
 import os
 
-from configparser import ConfigParser
+from ConfigParser import ConfigParser
 
 
 def gather_scripts():

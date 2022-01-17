@@ -9,8 +9,6 @@ from plico.utils.decorator import override
 from plico_interferometer_server.controller.controller import \
     InterferometerController
 from plico.rpc.zmq_ports import ZmqPorts
-from plico_interferometer_server.devices.phase_cam_4030 import PhaseCam4030
-from plico_interferometer_server.devices.wyko4100 import Wyko4100_4Sight223
 
 
 class Runner(BaseRunner):
@@ -41,10 +39,12 @@ class Runner(BaseRunner):
         self._interferometer = SimulatedInterferometer(interferometerName)
 
     def _createWyko4100(self, interferometerDeviceSection):
+        from plico_interferometer_server.devices.wyko4100 import Wyko4100_4Sight223
         name = self.configuration.deviceName(interferometerDeviceSection)
         self._interferometer = Wyko4100_4Sight223(name=name)
 
     def _createPhaseCam4030(self, interferometerDeviceSection):
+        from plico_interferometer_server.devices.phase_cam_4030 import PhaseCam4030
         name = self.configuration.deviceName(interferometerDeviceSection)
         ipaddr = self.configuration.getValue(
             interferometerDeviceSection, 'ip_address')
