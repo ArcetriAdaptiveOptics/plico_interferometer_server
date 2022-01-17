@@ -9,7 +9,6 @@ from plico.utils.decorator import override
 from plico_interferometer_server.controller.controller import \
     InterferometerController
 from plico.rpc.zmq_ports import ZmqPorts
-from plico_interferometer_server.devices.phase_cam_4030 import PhaseCam4030
 
 
 class Runner(BaseRunner):
@@ -22,21 +21,35 @@ class Runner(BaseRunner):
     def _createInterferometerDevice(self):
         interferometerDeviceSection = self.configuration.getValue(
             self.getConfigurationSection(), 'interferometer')
-        interferometerModel = self.configuration.deviceModel(interferometerDeviceSection)
+        interferometerModel = self.configuration.deviceModel(
+            interferometerDeviceSection)
         if interferometerModel == 'simulated_interferometer':
             self._createSimulatedInterferometer(interferometerDeviceSection)
         elif interferometerModel == 'phase_cam_4030':
             self._createPhaseCam4030(interferometerDeviceSection)
+        elif interferometerModel == 'wyko_4100_4sight_223':
+            self._createWyko4100(interferometerDeviceSection)
         else:
-            raise KeyError('Unsupported interferometer model %s' % interferometerModel)
+            raise KeyError('Unsupported interferometer model %s' %
+                           interferometerModel)
 
     def _createSimulatedInterferometer(self, interferometerDeviceSection):
-        interferometerName = self.configuration.deviceName(interferometerDeviceSection)
+        interferometerName = self.configuration.deviceName(
+            interferometerDeviceSection)
         self._interferometer = SimulatedInterferometer(interferometerName)
 
-    def _createPhaseCam4030(self, interferometerDeviceSection):
+    def _createWyko4100(self, interferometerDeviceSection):
+        from plico_interferometer_server.devices.wyko4100 import \
+            Wyko4100_4Sight223
         name = self.configuration.deviceName(interferometerDeviceSection)
-        ipaddr = self.configuration.getValue(interferometerDeviceSection, 'ip_address')
+        self._interferometer = Wyko4100_4Sight223(name=name)
+
+    def _createPhaseCam4030(self, interferometerDeviceSection):
+        from plico_interferometer_server.devices.phase_cam_4030 import \
+            PhaseCam4030
+        name = self.configuration.deviceName(interferometerDeviceSection)
+        ipaddr = self.configuration.getValue(
+            interferometerDeviceSection, 'ip_address')
         timeout = self.configuration.getValue(
             interferometerDeviceSection, 'comm_timeout', getfloat=True)
         kwargs = {'timeout': timeout, 'name': name}
