@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     ver = open(os.path.join('Pyro', 'constants.py'), 'r').read()
     ver = ver[ver.find('VERSION'):].split('\'')[1]
-    print('Pyro Version = %s' % ver)
+    print('Pyro Version: %s' % ver)
 
     setup(name="Pyro",
           version=ver,
