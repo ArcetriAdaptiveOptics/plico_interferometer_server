@@ -30,6 +30,17 @@ class PhaseCam6110(AbstractInterferometer):
 
     @override
     def wavefront(self, how_many=1):
+        '''
+        Parameters
+        ----------
+        how_many: int
+            numbers of frame to acquire
+        
+        Returns
+        -------
+        masked_ima: numpy masked array
+            image or mean of the images required
+        '''
         if how_many == 1:
             width, height, pixel_size_in_microns, data_array = \
                 self._i4d.takeSingleMeasurement()
