@@ -12,6 +12,8 @@ class Wyko4100_4Sight223(AbstractInterferometer):
     Wyko 4100 retrofitted by 4D Technology
     '''
 
+    WKYO_LAMBDA_IN_M = 632.8e-9
+
     def __init__(self,
                  name='wyko4100 on 4sight2.23',
                  **_):
@@ -63,7 +65,7 @@ class Wyko4100_4Sight223(AbstractInterferometer):
         remoteCtrl = self._retrieveProxy()
         remoteCtrl._setTimeout(int(4 * how_many))
         v = remoteCtrl.wavefront()
-        return np.ma.array(data=v['data'], mask=v['mask'])
+        return np.ma.array(data=v['data'] * self.WKYO_LAMBDA_IN_M, mask=v['mask'])
 
     def raise_exception(self):
         self.logger.notice("calling some unexisting method...")
