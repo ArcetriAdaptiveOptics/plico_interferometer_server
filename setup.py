@@ -168,6 +168,62 @@ class Install4Sight18Command(Command):
         sys.exit()
 
 
+class Install4Sight224Command(Command):
+    """Support setup.py install_4sight224"""
+
+    description = 'Install files needed to communicate with Wyko4100 4sight2.24 via Pyro'
+    user_options = []
+
+    @staticmethod
+    def status(s):
+        print(s)
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        self.status(self.description)
+        root_dest = os.path.join('C:', os.sep, 'Program Files', '4sight2.24')
+        print('4sight root folder is: %s' % root_dest)
+        self.status('Installing pyro in current python environment')
+        os.chdir(os.path.join('archive_for_wyko', 'Pyro-3.6'))
+        os.system('python setup.py install')
+        os.chdir(here)
+
+        site_package_dest = os.path.join(root_dest, 'scripts', 'site-packages')
+        self.status(
+            'Installing 3rd part modules in %s' % site_package_dest)
+        self.copy_tree(
+            os.path.join('archive_for_wyko', 'Pyro-3.6', 'Pyro'),
+            os.path.join(site_package_dest, 'Pyro'))
+        self.copy_tree(
+            os.path.join('archive_for_wyko', 'site-packages'),
+            os.path.join(site_package_dest))
+        self.copy_tree(
+            os.path.join('plico_interferometer_server', 'i4sight223'),
+            os.path.join(site_package_dest, 'i4sight223'))
+
+        script_dest = os.path.join(root_dest, 'scripts')
+        self.status(
+            'Installing pyro server startup script in %s' % script_dest)
+        self.copy_file(os.path.join('archive_for_wyko',
+                                    'ServerStartup223.py'), script_dest)
+
+        self.status('Installing Pyro.conf in %s' % root_dest)
+        self.copy_file(os.path.join(
+            'archive_for_wyko', 'Pyro.conf'), root_dest)
+
+        pyro_dir = os.path.join('C:', os.sep, '4D', 'Pyro')
+        self.status('Creating folder %s' % pyro_dir)
+        self.mkpath(pyro_dir)
+
+        sys.exit()
+
+
+
 setup(name=NAME,
       description=DESCRIPTION,
       version=about['__version__'],
@@ -211,5 +267,6 @@ setup(name=NAME,
       test_suite='test',
       cmdclass={'upload': UploadCommand,
                 'install_4sight223': Install4Sight223Command,
+                'install_4sight224': Install4Sight224Command,
                 'install_4sight18': Install4Sight18Command, },
       )
