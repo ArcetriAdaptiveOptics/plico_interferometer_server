@@ -32,7 +32,8 @@ class Controller:
         Returns
         -------
         wavefront: np.ma.array
-            wavefront map in nm
+            wavefront/surface map in nm
+            depends on wedge factor
         '''
         self.log("Getting wavefront")
         ret = Measure().GetDataset().GetArray()

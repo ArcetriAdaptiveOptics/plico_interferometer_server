@@ -27,6 +27,8 @@ class Runner(BaseRunner):
             self._createSimulatedInterferometer(interferometerDeviceSection)
         elif interferometerModel == 'phase_cam_4030':
             self._createPhaseCam4030(interferometerDeviceSection)
+        elif interferometerModel == 'phase_cam_6110':
+            self._createPhaseCam6110(interferometerDeviceSection)
         elif interferometerModel == 'wyko_4100_4sight_223':
             self._createWyko4100(interferometerDeviceSection)
         else:
@@ -59,6 +61,22 @@ class Runner(BaseRunner):
         except KeyError:
             pass
         self._interferometer = PhaseCam4030(ipaddr, **kwargs)
+
+    def _createPhaseCam6110(self, interferometerDeviceSection):
+        from plico_interferometer_server.devices.phase_cam_6110 import \
+            PhaseCam6110
+        name = self.configuration.deviceName(interferometerDeviceSection)
+        ipaddr = self.configuration.getValue(
+            interferometerDeviceSection, 'ip_address')
+        timeout = self.configuration.getValue(
+            interferometerDeviceSection, 'comm_timeout', getfloat=True)
+        kwargs = {'timeout': timeout, 'name': name}
+        try:
+            port = self.configuration.basePort(interferometerDeviceSection)
+            kwargs['port'] = port
+        except KeyError:
+            pass
+        self._interferometer = PhaseCam6110(ipaddr, **kwargs)
 
     def _replyPort(self):
         return self.configuration.replyPort(self.getConfigurationSection())

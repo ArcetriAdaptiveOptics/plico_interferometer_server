@@ -13,6 +13,8 @@ class Wyko4100_4Sight223(AbstractInterferometer):
     '''
     WKYO_LAMBDA_IN_M = 632.8e-9
 
+    WKYO_LAMBDA_IN_M = 632.8e-9
+
     def __init__(self,
                  name='wyko4100 on 4sight2.23',
                  **_):
