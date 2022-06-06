@@ -168,10 +168,10 @@ class Install4Sight18Command(Command):
         sys.exit()
 
 
-class Install4Sight224Command(Command):
+class Install4Sight24Command(Command):
     """Support setup.py install_4sight224"""
 
-    description = 'Install files needed to communicate with Wyko4100 4sight2.24 via Pyro'
+    description = 'Install files needed to communicate with PhaseCam4020 4sight2.4 via Pyro'
     user_options = []
 
     @staticmethod
@@ -186,7 +186,7 @@ class Install4Sight224Command(Command):
 
     def run(self):
         self.status(self.description)
-        root_dest = os.path.join('C:', os.sep, 'Program Files', '4sight2.24')
+        root_dest = os.path.join('C:', os.sep, 'Program Files', '4sight2.4')
         print('4sight root folder is: %s' % root_dest)
         self.status('Installing pyro in current python environment')
         os.chdir(os.path.join('archive_for_wyko', 'Pyro-3.6'))
@@ -210,7 +210,7 @@ class Install4Sight224Command(Command):
         self.status(
             'Installing pyro server startup script in %s' % script_dest)
         self.copy_file(os.path.join('archive_for_wyko',
-                                    'ServerStartup223.py'), script_dest)
+                                    'ServerStartup24.py'), script_dest)
 
         self.status('Installing Pyro.conf in %s' % root_dest)
         self.copy_file(os.path.join(
@@ -242,6 +242,7 @@ setup(name=NAME,
                 'plico_interferometer_server.controller',
                 'plico_interferometer_server.devices',
                 'plico_interferometer_server.i4sight223',
+                'plico_interferometer_server.i4sight18',
                 'plico_interferometer_server.process_monitor',
                 'plico_interferometer_server.scripts',
                 'plico_interferometer_server.utils',
@@ -267,6 +268,6 @@ setup(name=NAME,
       test_suite='test',
       cmdclass={'upload': UploadCommand,
                 'install_4sight223': Install4Sight223Command,
-                'install_4sight224': Install4Sight224Command,
+                'install_4sight24': Install4Sight24Command,
                 'install_4sight18': Install4Sight18Command, },
       )
