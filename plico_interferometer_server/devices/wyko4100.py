@@ -3,7 +3,7 @@ from plico.utils.logger import Logger
 from plico.utils.decorator import override
 from plico_interferometer_server.devices.abstract_interferometer import \
     AbstractInterferometer
-from plico_interferometer_server.i4sight223.Commons import Constants
+from plico_interferometer_server.i4sight2.Commons import Constants
 import Pyro.core
 
 
