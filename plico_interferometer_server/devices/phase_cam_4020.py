@@ -7,18 +7,18 @@ from plico_interferometer_server.i4sight2.Commons import Constants
 import Pyro.core
 
 
-class Wyko4100_4Sight223(AbstractInterferometer):
+class PhaseCam4020_4Sight(AbstractInterferometer):
     '''
-    Wyko 4100 retrofitted by 4D Technology
+    4D Technology PhaseCam 4020
     '''
-    WKYO_LAMBDA_IN_M = 632.8e-9
+    LAMBDA_IN_M = 632.8e-9
 
     def __init__(self,
-                 name='wyko4100 on 4sight2.23',
+                 name='PhaseCam4020 on 4Sight',
                  **_):
         self._name = name
         self.ipaddr = 'localhost'
-        self.logger = Logger.of('Wyko4100')
+        self.logger = Logger.of('PhaseCam4020')
         # Init the Pyro client
         Pyro.core.initClient()
         self._remoteCtrlUri = \
@@ -64,7 +64,7 @@ class Wyko4100_4Sight223(AbstractInterferometer):
         remoteCtrl = self._retrieveProxy()
         remoteCtrl._setTimeout(int(4 * how_many))
         v = remoteCtrl.wavefront()
-        return np.ma.array(data=v['data'] * self.WKYO_LAMBDA_IN_M, mask=v['mask'])
+        return np.ma.array(data=v['data'] * self.LAMBDA_IN_M, mask=v['mask'])
 
     def raise_exception(self):
         self.logger.notice("calling some unexisting method...")

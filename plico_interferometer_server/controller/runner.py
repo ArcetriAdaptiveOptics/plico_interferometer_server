@@ -29,6 +29,8 @@ class Runner(BaseRunner):
             self._createPhaseCam4030(interferometerDeviceSection)
         elif interferometerModel == 'wyko_4100_4sight_223':
             self._createWyko4100(interferometerDeviceSection)
+        elif interferometerModel == 'phase_cam_4020_4sight':
+            self._createPhaseCam4020(interferometerDeviceSection)
         else:
             raise KeyError('Unsupported interferometer model %s' %
                            interferometerModel)
@@ -37,6 +39,12 @@ class Runner(BaseRunner):
         interferometerName = self.configuration.deviceName(
             interferometerDeviceSection)
         self._interferometer = SimulatedInterferometer(interferometerName)
+
+    def _createPhaseCam4020(self, interferometerDeviceSection):
+        from plico_interferometer_server.devices.phase_cam_4020 import \
+            PhaseCam4020_4Sight
+        name = self.configuration.deviceName(interferometerDeviceSection)
+        self._interferometer = PhaseCam4020_4Sight(name=name)
 
     def _createWyko4100(self, interferometerDeviceSection):
         from plico_interferometer_server.devices.wyko4100 import \
