@@ -1,7 +1,7 @@
 ''' 
 Set of commons info needed by Pyro Server and Client.
 
-Used with 4sight 2.23
+Used with 4sight 2.23 and 2.4
 '''
 
 

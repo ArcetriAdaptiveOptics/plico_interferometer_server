@@ -9,11 +9,18 @@ import Pyro.util
 # @Class: Controller
 # Wrapper around the 4D python library to control the interferometer
 #
+#
 # NOTE: it works in the local interferometer host
 # @
 
 
 class Controller:
+    '''
+    Interface to interact with 4sight to control the interferometer
+    
+    Tested on 4Sight 2.23 and 2.4
+ 
+    '''
 
     def __init__(self):
         self.logSource = "CONTROLLER I4D"

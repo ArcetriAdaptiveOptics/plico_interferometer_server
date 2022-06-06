@@ -11,7 +11,7 @@ sys.path.append('C:\Program Files\\4Sight2.4\scripts\site-packages')
 
 
 # Create the Server
-from i4sight223 import Server
+from i4sight2 import Server
 wyko_server = Server.Server()
 
 # Start the Server

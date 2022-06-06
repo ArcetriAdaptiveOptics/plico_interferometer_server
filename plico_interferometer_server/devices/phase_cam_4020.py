@@ -3,18 +3,18 @@ from plico.utils.logger import Logger
 from plico.utils.decorator import override
 from plico_interferometer_server.devices.abstract_interferometer import \
     AbstractInterferometer
-from plico_interferometer_server.i4sight18.Commons import Constants
+from plico_interferometer_server.i4sight223.Commons import Constants
 import Pyro.core
 
 
-class PhaseCam4020_4Sight18(AbstractInterferometer):
+class PhaseCam4020_4Sight(AbstractInterferometer):
     '''
     4D Technology PhaseCam 4020
     '''
     LAMBDA_IN_M = 632.8e-9
 
     def __init__(self,
-                 name='PhaseCam4020 on 4Sight1.8',
+                 name='PhaseCam4020 on 4Sight',
                  **_):
         self._name = name
         self.ipaddr = 'localhost'
