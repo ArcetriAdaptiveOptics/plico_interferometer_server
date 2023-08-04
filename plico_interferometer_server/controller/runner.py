@@ -31,6 +31,8 @@ class Runner(BaseRunner):
             self._createWyko4100(interferometerDeviceSection)
         elif interferometerModel == 'phase_cam_4020_4sight':
             self._createPhaseCam4020(interferometerDeviceSection)
+        elif interferometerModel == 'phase_cam_6110':
+            self._createPhaseCam(interferometerDeviceSection)
         else:
             raise KeyError('Unsupported interferometer model %s' %
                            interferometerModel)
@@ -67,6 +69,20 @@ class Runner(BaseRunner):
         except KeyError:
             pass
         self._interferometer = PhaseCam4030(ipaddr, **kwargs)
+
+    def _createPhaseCam(self, interferometerDeviceSection):
+        from plico_interferometer_server.devices.WCF_interface_for_4SightFocus import \
+            WCFInterfacer
+        name = self.configuration.deviceName(interferometerDeviceSection)
+        ipaddr4D = self.configuration.getValue(
+            interferometerDeviceSection, 'ip_address')
+        timeout = self.configuration.getValue(
+            interferometerDeviceSection, 'comm_timeout', getfloat=True)
+        kwargs = {'timeout': timeout, 'name': name}
+        port4D = self.configuration.basePort(interferometerDeviceSection)
+        kwargs['port'] = port4D
+
+        self._interferometer = WCFInterfacer(name=name, ipaddr4D, port4D)
 
     def _replyPort(self):
         return self.configuration.replyPort(self.getConfigurationSection())
