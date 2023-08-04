@@ -13,8 +13,8 @@ class WCFInterfacer(AbstractInterferometer):
     LAMBDA_IN_M = 632.8e-9
 
     def __init__(self,
-                 name='PhaseCam6110',
-                 ipaddr, port):
+                 ipaddr, port,
+                 name='PhaseCam6110'):
         self._name = name
         self.ipaddr = 'localhost'
         self.logger = Logger.of('PhaseCam6110')

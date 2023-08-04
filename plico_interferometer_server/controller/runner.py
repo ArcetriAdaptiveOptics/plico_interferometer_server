@@ -82,7 +82,7 @@ class Runner(BaseRunner):
         port4D = self.configuration.basePort(interferometerDeviceSection)
         kwargs['port'] = port4D
 
-        self._interferometer = WCFInterfacer(name=name, ipaddr4D, port4D)
+        self._interferometer = WCFInterfacer(ipaddr4D, port4D, name=name)
 
     def _replyPort(self):
         return self.configuration.replyPort(self.getConfigurationSection())
