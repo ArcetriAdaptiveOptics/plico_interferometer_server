@@ -1,4 +1,8 @@
 import json
+import os
+import h5py
+import datetime
+import glob
 import numpy as np
 import urllib
 from plico_interferometer_server.devices.abstract_interferometer import \
@@ -13,13 +17,14 @@ class WCFInterfacer(AbstractInterferometer):
     LAMBDA_IN_M = 632.8e-9
 
     def __init__(self,
-                 ipaddr, port,
+                 ipaddr, port, burst_folder_name_4D_PC,
                  name='PhaseCam6110'):
         self._name = name
         self.ipaddr = 'localhost'
         self.logger = Logger.of('PhaseCam6110')
         self._ip = ipaddr
         self._port = port
+        self._burstFolderName4DPc = burst_folder_name_4D_PC
         #self._ping(self._ip)
 
         self._dataServiceAddress = 'http://%s:%i/DataService/' % (self._ip, self._port)
@@ -82,6 +87,35 @@ class WCFInterfacer(AbstractInterferometer):
         mask[idx, idy] = 1
         masked_ima = np.ma.masked_array(data, mask=mask.astype(bool))
         return masked_ima
+
+    def meanImageFromBurst(self, numberOfFrames, folder_name=None):
+        if folder_name is None:
+            folder_name = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.burstFramesToSpecificDirectory(os.path.join(self._burstFolderName4DPc,
+                                                        folder_name), numberOfFrames)
+        self.convertRawFramesInDirectoryToMeasurementsInDestinationDirectory(
+            os.path.join(self._burstFolderName4DPc, folder_name),
+            os.path.join(self._burstFolderName4DPc, folder_name))
+        
+        listtot = glob.glob(os.path.join(self._burstFolderName4DPc, folder_name, '*.4D'))
+        listtot.sort()
+        image_list = []
+        for ima_name in listot:
+            masked_ima = self._readPhaseCameWFCData(ima_name)
+            image_list.append(masked_ima)
+        images = np.ma.dstack(image_list)
+        mean_ima = np.ma.mean(images, 2)
+        return mean_ima
+
+    def _readPhaseCameWFCData(self, i4dfilename):
+        with h5py.File(i4dfilename, 'r') as ff:
+            data = ff.get('/Measurement/SurfaceInWaves/Data')
+            meas = data[()]
+            mask = np.invert(np.isfinite(meas))
+
+        image = np.ma.masked_array(meas * LAMBDA_IN_M, mask=mask)
+        return image
+
 
 ###
     def _readJsonData(self, url, data=None):
