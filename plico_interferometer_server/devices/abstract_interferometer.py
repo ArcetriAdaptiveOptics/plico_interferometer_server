@@ -32,5 +32,21 @@ class AbstractInterferometer(with_metaclass(abc.ABCMeta, object)):
         assert False
 
     @abc.abstractmethod
+    def burst_and_return_average(self, how_many=1):
+        '''
+        Parameters
+        -----------
+        how_many: int (default=1)
+            return the average of how_many measurements.
+
+        Returns
+        -------
+        wavefront: ~numpy.masked.array
+            wavefront map in meters
+
+        '''
+        assert False
+
+    @abc.abstractmethod
     def deinitialize(self):
         assert False

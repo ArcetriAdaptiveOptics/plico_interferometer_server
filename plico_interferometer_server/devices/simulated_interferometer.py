@@ -24,6 +24,11 @@ class SimulatedInterferometer(AbstractInterferometer):
         return sic.wavefront(how_many)
 
     @override
+    def burst_and_return_average(self, how_many=1):
+        sic = SimulatedInterferometerClient()
+        return sic.wavefront(how_many)
+
+    @override
     def deinitialize(self):
         pass
 
