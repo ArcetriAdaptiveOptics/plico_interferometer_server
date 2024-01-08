@@ -88,12 +88,17 @@ class WCFInterfacer(AbstractInterferometer):
         masked_ima = np.ma.masked_array(data, mask=mask.astype(bool))
         return masked_ima
 
+    @override
+    def burst_and_return_average(self, how_many=1):
+        mean_ima = self.meanImageFromBurst(how_many, None)
+        return mean_ima
+
     def meanImageFromBurst(self, numberOfFrames, folder_name=None):
         if folder_name is None:
             folder_name = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.burstFramesToSpecificDirectory(os.path.join(self._burstFolderName4DPc,
+        self.burst_frames_to_specific_directory(os.path.join(self._burstFolderName4DPc,
                                                         folder_name), numberOfFrames)
-        self.convertRawFramesInDirectoryToMeasurementsInDestinationDirectory(
+        self.convert_raw_frames_in_directory_to_measurements_in_destination_directory(
             os.path.join(self._burstFolderName4DPc, folder_name),
             os.path.join(self._burstFolderName4DPc, folder_name))
         

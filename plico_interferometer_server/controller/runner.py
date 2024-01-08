@@ -76,14 +76,14 @@ class Runner(BaseRunner):
         name = self.configuration.deviceName(interferometerDeviceSection)
         ipaddr4D = self.configuration.getValue(
             interferometerDeviceSection, 'ip_address')
-        timeout = self.configuration.getValue(
-            interferometerDeviceSection, 'comm_timeout', getfloat=True)
-        kwargs = {'timeout': timeout, 'name': name}
+    #    timeout = self.configuration.getValue(
+    #        interferometerDeviceSection, 'comm_timeout', getfloat=True)
+    #    kwargs = {'timeout': timeout, 'name': name}
         port4D = self.configuration.basePort(interferometerDeviceSection)
-        kwargs['port'] = port4D
+    #    kwargs['port'] = port4D
         
         burst_folder_name_4D_PC = self.configuration.getValue(
-            interferometerDeviceSection, 'burst_folder_name_4D_PC')
+            interferometerDeviceSection, 'burst_folder_name_4d_pc')
 
         self._interferometer = WCFInterfacer(ipaddr4D, port4D,
                                              burst_folder_name_4D_PC,
