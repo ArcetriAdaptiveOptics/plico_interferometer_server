@@ -123,7 +123,7 @@ class WCFInterfacer(AbstractInterferometer):
 
 
 ###
-    def _readJsonData(self, url, data=None):
+    def _readJsonData(self, url, data=None, timeout=None):
         """
         Parameters
         ----------
@@ -150,7 +150,10 @@ class WCFInterfacer(AbstractInterferometer):
             req = url
         try:
             try:
-                response = urllib.request.urlopen(req, timeout=50)
+                if timeout:
+                    response = urllib.request.urlopen(req, timeout=timeout)
+                else:
+                    response = urllib.request.urlopen(req, timeout=20)
             except urllib.request.URLError as error:
                 self._ping(self._ip)
                 raise Exception('Error = %s' %str(error))
@@ -486,7 +489,8 @@ class WCFInterfacer(AbstractInterferometer):
         url = '%s%s' % (self._frameBurstServiceAddress, 'BurstFramesToSpecificDirectory')
         data = {'BurstDirectory' : directory,
                 'NumberOfFrames' : numberOfFrames}
-        self._readJsonData(url, data)
+        timeout = 5 * numberOfFrames
+        self._readJsonData(url, data, timeout)
 
     def burst_frames_to_disk(self, numberOfFrames):
         '''
@@ -497,8 +501,9 @@ class WCFInterfacer(AbstractInterferometer):
 
         '''
         url = '%s%s' % (self._frameBurstServiceAddress, 'BurstFramesToDisk')
+        timeout = 5 * numberOfFrames
         data = numberOfFrames
-        self._readJsonData(url, data)
+        self._readJsonData(url, data, timeout)
 
 class HostNotFoundException(Exception):
     pass
