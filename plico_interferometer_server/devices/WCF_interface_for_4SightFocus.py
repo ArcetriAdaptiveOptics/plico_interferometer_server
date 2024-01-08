@@ -105,7 +105,7 @@ class WCFInterfacer(AbstractInterferometer):
         listtot = glob.glob(os.path.join(self._burstFolderName4DPc, folder_name, '*.4D'))
         listtot.sort()
         image_list = []
-        for ima_name in listot:
+        for ima_name in listtot:
             masked_ima = self._readPhaseCameWFCData(ima_name)
             image_list.append(masked_ima)
         images = np.ma.dstack(image_list)
@@ -118,7 +118,7 @@ class WCFInterfacer(AbstractInterferometer):
             meas = data[()]
             mask = np.invert(np.isfinite(meas))
 
-        image = np.ma.masked_array(meas * LAMBDA_IN_M, mask=mask)
+        image = np.ma.masked_array(meas * self.LAMBDA_IN_M, mask=mask)
         return image
 
 
@@ -150,7 +150,7 @@ class WCFInterfacer(AbstractInterferometer):
             req = url
         try:
             try:
-                response = urllib.request.urlopen(req, timeout=5)
+                response = urllib.request.urlopen(req, timeout=50)
             except urllib.request.URLError as error:
                 self._ping(self._ip)
                 raise Exception('Error = %s' %str(error))
