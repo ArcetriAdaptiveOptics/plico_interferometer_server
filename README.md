@@ -17,6 +17,10 @@ server for interferometer control under the plico environment. This library allo
     <td>PhaseCam 6110</td>
     <td>???</td>
   </tr>
+  <tr>
+    <td>PhaseCam 4030? (Padova)</td>
+    <td>2022.R1.2</td>
+  </tr>
 </table>
 - Run default script and set interferometer parameters for you acquisition.
 
