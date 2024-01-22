@@ -77,6 +77,6 @@ class PhaseCam4020_4Sight(AbstractInterferometer):
 
     #TODO implement this
     @override
-    def burst_and_return_average(self, how_many=1):
+    def acquire_burst(self, how_many=1):
         pass
 

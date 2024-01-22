@@ -67,7 +67,7 @@ class WCFInterfacer(AbstractInterferometer):
                 self.take_single_measurement()
             masked_ima = self._fromDataArrayToMaskedArray(
                 width, height, data_array * self.LAMBDA_IN_M)
-        else:
+        elif 1 < how_many < 5:
             image_list = []
             for i in range(how_many):
                 width, height, pixel_size_in_microns, data_array = \
@@ -77,7 +77,8 @@ class WCFInterfacer(AbstractInterferometer):
                 image_list.append(masked_ima)
             images = np.ma.dstack(image_list)
             masked_ima = np.ma.mean(images, axis=2)
-
+        else:
+            masked_ima = self.meanImageFromBurst(how_many)
         return masked_ima
 
     def _fromDataArrayToMaskedArray(self, width, height, data_array):
@@ -89,9 +90,8 @@ class WCFInterfacer(AbstractInterferometer):
         return masked_ima
 
     @override
-    def burst_and_return_average(self, how_many=1):
-        mean_ima = self.meanImageFromBurst(how_many, None)
-        return mean_ima
+    def acquire_burst(self, how_many=5):
+        raise Exception('To be implemented!')
 
     def meanImageFromBurst(self, numberOfFrames, folder_name=None):
         if folder_name is None:

@@ -36,6 +36,6 @@ class PhaseCam4030(AbstractInterferometer):
         pass
 
     @override
-    def burst_and_return_average(self, how_many=1):
+    def acquire_burst(self, how_many=1):
         #TODO implement this
         return np.ma.zeros((500, 500))

@@ -76,6 +76,6 @@ class Wyko4100_4Sight223(AbstractInterferometer):
         return self._retrieveProxy().matrix(size)
 
     @override
-    def burst_and_return_average(self, how_many=1):
+    def acquire_burst(self, how_many=1):
         pass
 

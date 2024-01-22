@@ -67,8 +67,8 @@ class InterferometerController(Stepable,
         return self._interferometer.wavefront(how_many)
 
     @logEnterAndExit('Getting burst', 'Getting burst executed')
-    def burst_and_return_average(self, how_many=1):
-        return self._interferometer.burst_and_return_average(how_many)
+    def acquire_burst(self, how_many=1):
+        return self._interferometer.acquire_burst(how_many)
 
     def _getInterferometerStatus(self):
         self._logger.debug('get InterferometerStatus')
