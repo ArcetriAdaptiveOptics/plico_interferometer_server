@@ -67,7 +67,7 @@ class WCFInterfacer(AbstractInterferometer):
                 self.take_single_measurement()
             masked_ima = self._fromDataArrayToMaskedArray(
                 width, height, data_array * self.LAMBDA_IN_M)
-        elif 1 < how_many < 5:
+        elif 1 < how_many < 15:
             image_list = []
             for i in range(how_many):
                 width, height, pixel_size_in_microns, data_array = \
