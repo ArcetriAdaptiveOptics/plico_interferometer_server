@@ -3,6 +3,7 @@ import os
 import h5py
 import datetime
 import glob
+import shutil
 import numpy as np
 import urllib
 from plico_interferometer_server.devices.abstract_interferometer import \
@@ -67,16 +68,6 @@ class WCFInterfacer(AbstractInterferometer):
                 self.take_single_measurement()
             masked_ima = self._fromDataArrayToMaskedArray(
                 width, height, data_array * self.LAMBDA_IN_M)
-        elif 1 < how_many < 15:
-            image_list = []
-            for i in range(how_many):
-                width, height, pixel_size_in_microns, data_array = \
-                    self.take_single_measurement()
-                masked_ima = self._fromDataArrayToMaskedArray(
-                    width, height, data_array * self.LAMBDA_IN_M)
-                image_list.append(masked_ima)
-            images = np.ma.dstack(image_list)
-            masked_ima = np.ma.mean(images, axis=2)
         else:
             masked_ima = self.meanImageFromBurst(how_many)
         return masked_ima
@@ -93,16 +84,34 @@ class WCFInterfacer(AbstractInterferometer):
     def acquire_burst(self, how_many=5):
         raise Exception('To be implemented!')
 
-    def meanImageFromBurst(self, numberOfFrames, folder_name=None):
-        if folder_name is None:
-            folder_name = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.burst_frames_to_specific_directory(os.path.join(self._burstFolderName4DPc,
-                                                        folder_name), numberOfFrames)
+    def meanImageFromBurst(self, numberOfFrames):
+        '''
+        Parameters
+        ----------
+        numberOfFrames: int
+            number of frame to be acquired with the burst function.
+            The data a stored in a tracking number created inside
+            a temporary folder placed inside the path indicated
+            in the configuration file
+
+        Returns
+        -------
+        mean_ima: numpy masked array
+            mean image from the burst acquisition
+        '''
+        initial_folder = os.path.join(self._burstFolderName4DPc,
+                                      'temp') 
+        if os.path.exists(initial_folder) == False:
+            os.makedirs(initial_folder)
+        folder_name = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        data_file_path = os.path.join(initial_folder,
+                                      folder_name)
+        self.burst_frames_to_specific_directory(data_file_path, numberOfFrames)
         self.convert_raw_frames_in_directory_to_measurements_in_destination_directory(
-            os.path.join(self._burstFolderName4DPc, folder_name),
-            os.path.join(self._burstFolderName4DPc, folder_name))
+            os.path.join(data_file_path),
+            os.path.join(data_file_path))
         
-        listtot = glob.glob(os.path.join(self._burstFolderName4DPc, folder_name, '*.4D'))
+        listtot = glob.glob(os.path.join(data_file_path, '*.4D'))
         listtot.sort()
         image_list = []
         for ima_name in listtot:
@@ -110,6 +119,8 @@ class WCFInterfacer(AbstractInterferometer):
             image_list.append(masked_ima)
         images = np.ma.dstack(image_list)
         mean_ima = np.ma.mean(images, 2)
+        
+        shutil.rmtree(data_file_path)
         return mean_ima
 
     def _readPhaseCameWFCData(self, i4dfilename):
