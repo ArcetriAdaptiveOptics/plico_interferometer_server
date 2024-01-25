@@ -28,9 +28,16 @@ class WCFInterfacer(AbstractInterferometer):
         self._burstFolderName4DPc = burst_folder_name_4D_PC
         #self._ping(self._ip)
 
-        self._dataServiceAddress = 'http://%s:%i/DataService/' % (self._ip, self._port)
-        self._systemServiceAddress = 'http://%s:%i/SystemService/' % (self._ip, self._port)
-        self._frameBurstServiceAddress = 'http://%s:%i/FrameBurstService/' % (self._ip, self._port)
+        self._dataServiceAddress, self._systemServiceAddress, self._frameBurstServiceAddress = WCFInterfacer.create_addresses(
+            self._ip, self._port)
+
+    @classmethod
+    def create_addresses(cls, ip, port):
+        dataServiceAddress = 'http://%s:%i/DataService/' % (ip, port)
+        systemServiceAddress = 'http://%s:%i/SystemService/' % (ip, port)
+        frameBurstServiceAddress = 'http://%s:%i/FrameBurstService/' % (
+            ip, port)
+        return dataServiceAddress, systemServiceAddress, frameBurstServiceAddress
 
     def _ping(self, host):
         import platform
