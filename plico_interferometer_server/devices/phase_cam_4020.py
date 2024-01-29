@@ -74,3 +74,9 @@ class PhaseCam4020_4Sight(AbstractInterferometer):
 
     def matrix(self, size):
         return self._retrieveProxy().matrix(size)
+
+    #TODO implement this
+    @override
+    def acquire_burst(self, how_many=1):
+        pass
+
