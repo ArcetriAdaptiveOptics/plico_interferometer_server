@@ -4,6 +4,7 @@ import numpy as np
 import tempfile
 import unittest
 import logging
+import mock
 from plico.utils.logger import Logger
 from plico_interferometer_server.devices.WCF_interface_for_4SightFocus import WCFInterfacer
 
@@ -303,10 +304,12 @@ class WCFInterfacerTest(unittest.TestCase):
         wanted_url = self._expected_url_BurstFramesToDisk()
         self.assertEqual(self._calls[-1]['url'], wanted_url)
 
-    @unittest.skip('Import incorretto del file WCFInterfacer')
-    def test_wavefront_multiples(self):
-        wv = self._interferometer.meanImageFromBurst(3)
-        
+    @mock.patch('shutil.rmtree', autospec=True)
+    @mock.patch('numpy.ma', autospec=True)
+    def test_wavefront_multiples(self, mock_np, mock_shutil):
+        wv = self._interferometer.wavefront(3)
+        wanted_url = self._expected_url_ConvertRawFramesInDirectoryToMeasurementsInDestinationDirectory()
+        self.assertEqual(self._calls[-1]['url'], wanted_url)
 
 if __name__ == "__main__":
     unittest.main()
