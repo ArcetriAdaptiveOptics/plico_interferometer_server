@@ -40,6 +40,10 @@ class SimulatedInterferometer(AbstractInterferometer):
     def deinitialize(self):
         pass
 
+    @override
+    def list_available_burst(self):
+        pass
+
     @property
     def shape(self):
         return (self.SIZE_H, self.SIZE_W)

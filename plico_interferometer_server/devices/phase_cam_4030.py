@@ -47,3 +47,8 @@ class PhaseCam4030(AbstractInterferometer):
     @override
     def delete_burst(self, tn):
         raise Exception('To be implemented!')
+    
+    @override
+    def list_available_burst(self):
+        raise Exception('To be implemented!')
+

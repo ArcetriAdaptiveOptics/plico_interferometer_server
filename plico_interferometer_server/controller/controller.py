@@ -77,6 +77,10 @@ class InterferometerController(Stepable,
     @logEnterAndExit('Deleting burst', 'Deleting burst executed')
     def delete_burst(self, tracking_number):
         return self._interferometer.delete_burst(tracking_number)
+    
+    @logEnterAndExit('Listing burst', 'Listing burst executed')
+    def list_available_burst(self):
+        return self._interferometer.list_available_burst()
 
     def _getInterferometerStatus(self):
         self._logger.debug('get InterferometerStatus')

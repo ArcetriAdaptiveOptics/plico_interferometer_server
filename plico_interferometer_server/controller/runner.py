@@ -31,7 +31,7 @@ class Runner(BaseRunner):
             self._createWyko4100(interferometerDeviceSection)
         elif interferometerModel == 'phase_cam_4020_4sight':
             self._createPhaseCam4020(interferometerDeviceSection)
-        elif interferometerModel in ['phase_cam_6110', 'AccuFiz-100s']:
+        elif interferometerModel in ['phase_cam_6110', 'AccuFiz', 'phase_cam_WCF']:
             self._createPhaseCamWCF(interferometerDeviceSection)
         else:
             raise KeyError('Unsupported interferometer model %s' %

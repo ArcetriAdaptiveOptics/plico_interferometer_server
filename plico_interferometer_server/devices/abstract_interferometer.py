@@ -73,5 +73,9 @@ class AbstractInterferometer(with_metaclass(abc.ABCMeta, object)):
         assert False
 
     @abc.abstractmethod
+    def list_available_burst(self):
+        assert False
+
+    @abc.abstractmethod
     def deinitialize(self):
         assert False

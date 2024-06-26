@@ -153,6 +153,18 @@ class WCFInterfacer(AbstractInterferometer):
         data_file_path = os.path.join(self._burstFolderName4DPc, tn)
         shutil.rmtree(data_file_path)
         return
+    
+    @override
+    def list_available_burst(self):
+        '''
+        '''
+        data_file_path = os.path.join(self._burstFolderName4DPc)
+        listtot = glob.glob(os.path.join(data_file_path, '*'))
+        listtot.sort()
+        tn_list = []
+        for path in listtot:
+            tn_list.append(os.path.split(path)[-1])
+        return tn_list
 
     def meanImageFromBurst(self, numberOfFrames):
         '''
@@ -169,28 +181,11 @@ class WCFInterfacer(AbstractInterferometer):
         mean_ima: numpy masked array
             mean image from the burst acquisition
         '''
-        initial_folder = os.path.join(self._burstFolderName4DPc,
-                                      'temp') 
-        if os.path.exists(initial_folder) == False:
-            os.makedirs(initial_folder)
-        folder_name = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        data_file_path = os.path.join(initial_folder,
-                                      folder_name)
-        self.burst_frames_to_specific_directory(data_file_path, numberOfFrames)
-        self.convert_raw_frames_in_directory_to_measurements_in_destination_directory(
-            os.path.join(data_file_path),
-            os.path.join(data_file_path))
+        tn = self.acquire_burst(numberOfFrames)
+        cube = self.load_burst(tn)
+        mean_ima = np.ma.mean(cube, 2)
         
-        listtot = glob.glob(os.path.join(data_file_path, '*.4D'))
-        listtot.sort()
-        image_list = []
-        for ima_name in listtot:
-            masked_ima = self._readPhaseCameWFCData(ima_name)
-            image_list.append(masked_ima)
-        images = np.ma.dstack(image_list)
-        mean_ima = np.ma.mean(images, 2)
-        
-        shutil.rmtree(data_file_path)
+        self.delete_burst(tn)
         return mean_ima
 
     def _readPhaseCameWFCData(self, i4dfilename):
