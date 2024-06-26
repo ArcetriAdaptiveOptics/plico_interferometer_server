@@ -89,7 +89,70 @@ class WCFInterfacer(AbstractInterferometer):
 
     @override
     def acquire_burst(self, how_many=5):
-        raise Exception('To be implemented!')
+        '''
+        Parameters
+        -----------
+        how_many: int (default=5)
+            number of frames to be acquired
+
+        Returns
+        -------
+        tn: string
+            tracking number of the measurements
+
+        '''
+        initial_folder = os.path.join(self._burstFolderName4DPc)
+        if os.path.exists(initial_folder) == False:
+            os.makedirs(initial_folder)
+        folder_name = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        data_file_path = os.path.join(initial_folder,
+                                      folder_name, 'raw')
+        os.makedirs(data_file_path)
+        self.burst_frames_to_specific_directory(data_file_path, how_many)
+        return folder_name
+    
+    @override
+    def load_burst(self, tn):
+        '''
+        Parameters
+        -----------
+        tn: string
+            tracking number of the measurements
+
+        Returns
+        -------
+        cube: numpy masked array
+            cube of the measurement
+        '''
+        data_file_path = os.path.join(self._burstFolderName4DPc, tn)
+        raw_folder = os.path.join(data_file_path, 'raw')
+        data_folder = os.path.join(data_file_path, 'data')
+
+        if os.path.exists(data_folder) == False:
+            os.makedirs(data_folder)
+            self.convert_raw_frames_in_directory_to_measurements_in_destination_directory(
+                    data_folder, raw_folder)
+        
+        listtot = glob.glob(os.path.join(data_folder, '*.4D'))
+        listtot.sort()
+        image_list = []
+        for ima_name in listtot:
+            masked_ima = self._readPhaseCameWFCData(ima_name)
+            image_list.append(masked_ima)
+        cube = np.ma.dstack(image_list)
+        return cube
+    
+    @override
+    def delete_burst(self, tn):
+        '''
+        Parameters
+        -----------
+        tn: string
+            tracking number of the measurements
+        '''
+        data_file_path = os.path.join(self._burstFolderName4DPc, tn)
+        shutil.rmtree(data_file_path)
+        return
 
     def meanImageFromBurst(self, numberOfFrames):
         '''

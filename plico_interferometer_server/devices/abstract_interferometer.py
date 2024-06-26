@@ -48,5 +48,30 @@ class AbstractInterferometer(with_metaclass(abc.ABCMeta, object)):
         assert False
 
     @abc.abstractmethod
+    def load_burst(self, tn):
+        '''
+        Parameters
+        -----------
+        tn: string
+            tracking number of the measurements
+
+        Returns
+        -------
+        cube: numpy masked array
+            cube of the measurement
+        '''
+        assert False
+    
+    @abc.abstractmethod
+    def delete_burst(self, tn):
+        '''
+        Parameters
+        -----------
+        tn: string
+            tracking number of the measurements
+        '''
+        assert False
+
+    @abc.abstractmethod
     def deinitialize(self):
         assert False

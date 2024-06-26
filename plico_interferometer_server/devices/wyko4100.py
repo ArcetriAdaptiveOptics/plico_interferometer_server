@@ -77,5 +77,14 @@ class Wyko4100_4Sight223(AbstractInterferometer):
 
     @override
     def acquire_burst(self, how_many=1):
-        pass
+        raise Exception('To be implemented!')
+    
+    @override
+    def load_burst(self, tn):
+        raise Exception('To be implemented!')
+    
+    @override
+    def delete_burst(self, tn):
+        raise Exception('To be implemented!')
+
 

@@ -78,5 +78,14 @@ class PhaseCam4020_4Sight(AbstractInterferometer):
     #TODO implement this
     @override
     def acquire_burst(self, how_many=1):
-        pass
+        raise Exception('To be implemented!')
+    
+    @override
+    def load_burst(self, tn):
+        raise Exception('To be implemented!')
+
+    @override
+    def delete_burst(self, tn):
+        raise Exception('To be implemented!')
+
 

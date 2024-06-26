@@ -39,3 +39,11 @@ class PhaseCam4030(AbstractInterferometer):
     def acquire_burst(self, how_many=1):
         #TODO implement this
         return np.ma.zeros((500, 500))
+    
+    @override
+    def load_burst(self, tn):
+        raise Exception('To be implemented!')
+    
+    @override
+    def delete_burst(self, tn):
+        raise Exception('To be implemented!')
