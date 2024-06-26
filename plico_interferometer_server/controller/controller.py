@@ -66,6 +66,22 @@ class InterferometerController(Stepable,
     def wavefront(self, how_many=1):
         return self._interferometer.wavefront(how_many)
 
+    @logEnterAndExit('Getting burst', 'Getting burst executed')
+    def acquire_burst(self, how_many=1):
+        return self._interferometer.acquire_burst(how_many)
+    
+    @logEnterAndExit('Loading burst', 'Loading burst executed')
+    def load_burst(self, tracking_number):
+        return self._interferometer.load_burst(tracking_number)
+
+    @logEnterAndExit('Deleting burst', 'Deleting burst executed')
+    def delete_burst(self, tracking_number):
+        return self._interferometer.delete_burst(tracking_number)
+    
+    @logEnterAndExit('Listing burst', 'Listing burst executed')
+    def list_available_burst(self):
+        return self._interferometer.list_available_burst()
+
     def _getInterferometerStatus(self):
         self._logger.debug('get InterferometerStatus')
         interferometerStatus = InterferometerStatus(
