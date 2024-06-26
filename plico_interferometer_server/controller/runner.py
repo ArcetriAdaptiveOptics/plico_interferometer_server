@@ -31,7 +31,7 @@ class Runner(BaseRunner):
             self._createWyko4100(interferometerDeviceSection)
         elif interferometerModel == 'phase_cam_4020_4sight':
             self._createPhaseCam4020(interferometerDeviceSection)
-        elif interferometerModel == 'phase_cam_6110':
+        elif interferometerModel in ['phase_cam_6110', 'AccuFiz-100s']:
             self._createPhaseCamWCF(interferometerDeviceSection)
         else:
             raise KeyError('Unsupported interferometer model %s' %
@@ -76,11 +76,8 @@ class Runner(BaseRunner):
         name = self.configuration.deviceName(interferometerDeviceSection)
         ipaddr4D = self.configuration.getValue(
             interferometerDeviceSection, 'ip_address')
-    #    timeout = self.configuration.getValue(
-    #        interferometerDeviceSection, 'comm_timeout', getfloat=True)
-    #    kwargs = {'timeout': timeout, 'name': name}
         port4D = self.configuration.basePort(interferometerDeviceSection)
-    #    kwargs['port'] = port4D
+
         
         burst_folder_name_4D_PC = self.configuration.getValue(
             interferometerDeviceSection, 'burst_folder_name_4d_pc')
