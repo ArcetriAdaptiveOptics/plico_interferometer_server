@@ -17,8 +17,7 @@ from plico_interferometer_server.utils.starter_script_creator import \
     StarterScriptCreator
 from plico_interferometer_server.utils.process_startup_helper import \
     ProcessStartUpHelper
-from plico_interferometer_server.process_monitor.runner import Runner as \
-    ProcessMonitorRunner
+from plico.utils.process_monitor_runner import RUNNING_MESSAGE as MONITOR_RUNNING_MESSAGE
 from plico_interferometer.client.interferometer_client import \
     InterferometerClient
 from plico_interferometer.client.snapshot_entry import SnapshotEntry
@@ -109,7 +108,7 @@ class IntegrationTest(unittest.TestCase):
              self.CONF_SECTION],
             stdout=serverLog, stderr=serverLog)
         Poller(5).check(MessageInFileProbe(
-            ProcessMonitorRunner.RUNNING_MESSAGE, self.SERVER_LOG_PATH))
+            MONITOR_RUNNING_MESSAGE(Constants.SERVER_PROCESS_NAME), self.SERVER_LOG_PATH))
 
     def _testProcessesActuallyStarted(self):
         controllerLogFile = os.path.join(

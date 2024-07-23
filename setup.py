@@ -204,7 +204,7 @@ setup(name=NAME,
       package_data={
           'plico_interferometer_server': ['conf/plico_interferometer_server.conf', 'calib/*'],
       },
-      install_requires=["plico>=0.20",
+      install_requires=["plico>=0.30",
                         "plico_interferometer>=0.0.3",
                         "numpy",
                         "psutil",
