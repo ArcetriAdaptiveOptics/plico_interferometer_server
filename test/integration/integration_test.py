@@ -10,6 +10,7 @@ from test.test_helper import TestHelper, Poller, MessageInFileProbe, \
 from plico.utils.configuration import Configuration
 from plico.rpc.zmq_remote_procedure_call import ZmqRemoteProcedureCall
 from plico.utils.logger import Logger
+from plico.client.serverinfo_client import ServerInfoClient
 from plico.rpc.sockets import Sockets
 from plico.rpc.zmq_ports import ZmqPorts
 from plico_interferometer_server.utils.constants import Constants
@@ -49,9 +50,20 @@ class IntegrationTest(unittest.TestCase):
         self.configuration = Configuration()
         self.configuration.load(self.CONF_FILE)
         self.rpc = ZmqRemoteProcedureCall()
+        self._server_config_prefix = self.configuration.getValue(
+                                       Constants.PROCESS_MONITOR_CONFIG_SECTION,
+                                       'server_config_prefix')
+
 
         calibrationRootDir = self.configuration.calibrationRootDir()
         self._setUpCalibrationTempFolder(calibrationRootDir)
+
+        self.CONTROLLER_1_LOGFILE = os.path.join(self.LOG_DIR, '%s%d.log' % (self._server_config_prefix, 1))
+        self.CONTROLLER_2_LOGFILE = os.path.join(self.LOG_DIR, '%s%d.log' % (self._server_config_prefix, 2))
+        self.PROCESS_MONITOR_PORT = self.configuration.getValue(
+                                       Constants.PROCESS_MONITOR_CONFIG_SECTION,
+                                       'port', getint=True)
+
 
     def _setUpBasicLogging(self):
         logging.basicConfig(level=logging.DEBUG)
@@ -72,19 +84,9 @@ class IntegrationTest(unittest.TestCase):
 
     def tearDown(self):
         TestHelper.dumpFileToStdout(self.SERVER_LOG_PATH)
+        TestHelper.dumpFileToStdout(self.CONTROLLER_1_LOGFILE)
+        TestHelper.dumpFileToStdout(self.CONTROLLER_2_LOGFILE)
 
-        try:
-            server1_log_path = os.path.join(
-                self.LOG_DIR, "%s.log" % Constants.SERVER_1_CONFIG_SECTION)
-            TestHelper.dumpFileToStdout(server1_log_path)
-        except Exception:
-            pass
-        try:
-            server2_log_path = os.path.join(
-                self.LOG_DIR, "%s.log" % Constants.SERVER_1_CONFIG_SECTION)
-            TestHelper.dumpFileToStdout(server2_log_path)
-        except Exception:
-            pass
 
         if self.server is not None:
             TestHelper.terminateSubprocess(self.server)
@@ -111,28 +113,27 @@ class IntegrationTest(unittest.TestCase):
             MONITOR_RUNNING_MESSAGE(Constants.SERVER_PROCESS_NAME), self.SERVER_LOG_PATH))
 
     def _testProcessesActuallyStarted(self):
-        controllerLogFile = os.path.join(
-            self.LOG_DIR,
-            '%s.log' % Constants.SERVER_1_CONFIG_SECTION)
         Poller(5).check(MessageInFileProbe(
-            Runner.RUNNING_MESSAGE, controllerLogFile))
-        controller2LogFile = os.path.join(
-            self.LOG_DIR,
-            '%s.log' % Constants.SERVER_2_CONFIG_SECTION)
+            Runner.RUNNING_MESSAGE, self.CONTROLLER_1_LOGFILE))
         Poller(5).check(MessageInFileProbe(
-            Runner.RUNNING_MESSAGE, controller2LogFile))
+            Runner.RUNNING_MESSAGE, self.CONTROLLER_2_LOGFILE))
 
     def _buildClients(self):
         ports1 = ZmqPorts.fromConfiguration(
             self.configuration,
-            Constants.SERVER_1_CONFIG_SECTION)
+            '%s%d' % (self._server_config_prefix, 1))
         self.client1 = InterferometerClient(
             self.rpc, Sockets(ports1, self.rpc))
         ports2 = ZmqPorts.fromConfiguration(
             self.configuration,
-            Constants.SERVER_2_CONFIG_SECTION)
+            '%s%d' % (self._server_config_prefix, 2))
         self.client2 = InterferometerClient(
             self.rpc, Sockets(ports2, self.rpc))
+        self.clientAll = ServerInfoClient(
+            self.rpc,
+            Sockets(ZmqPorts('localhost', self.PROCESS_MONITOR_PORT), self.rpc).serverRequest(),
+            self._logger)
+
 
     def _check_backdoor(self):
         self.client1.execute(
