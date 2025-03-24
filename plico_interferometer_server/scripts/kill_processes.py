@@ -7,8 +7,8 @@ from plico_interferometer_server.utils.constants import Constants
 def main():
     logging.basicConfig(level=logging.INFO)
     processNames = [Constants.START_PROCESS_NAME,
-                    Constants.SERVER_1_PROCESS_NAME,
-                    Constants.SERVER_2_PROCESS_NAME,
+                    Constants.SERVER_PROCESS_NAME + "_1",
+                    Constants.SERVER_PROCESS_NAME + "_2",
                     ]
 
     for each in processNames:

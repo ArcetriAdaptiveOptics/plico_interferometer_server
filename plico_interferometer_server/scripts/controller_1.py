@@ -13,7 +13,7 @@ def main():
     configFileManager.installConfigFileFromPackage()
     argv = ['',
             configFileManager.getConfigFilePath(),
-            Constants.SERVER_1_CONFIG_SECTION]
+            'interferometer1']
     sys.exit(runner.start(argv))
 
 
