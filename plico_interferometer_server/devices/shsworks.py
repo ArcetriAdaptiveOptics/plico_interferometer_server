@@ -38,6 +38,8 @@ class OptocraftSHS(AbstractInterferometer):
         
         # Ensure temp folder exists
         os.makedirs(self.TEMP_FOLDER, exist_ok=True)
+        
+        self.logger.notice(f"Found temp folder to store files: {self.TEMP_FOLDER}")
 
         # Try to connect to SHSWorks
         try:
@@ -86,7 +88,7 @@ class OptocraftSHS(AbstractInterferometer):
                 os.remove(temp_file)
 
     def _load_bix(self, fname):
-        from membranemirror.read_write_big_bix import read_bix
+        from plico_interferometer_server.utils.read_write_big_bix import read_bix
         return read_bix(fname, printInfo=False)
 
     def get_field_stats(self, fieldId):
