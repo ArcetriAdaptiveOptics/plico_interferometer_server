@@ -25,11 +25,19 @@ class OptocraftSHS(AbstractInterferometer):
 
     MODEL_NAME = 'optocraft_shs_works'
 
-    def __init__(self, name='OptocraftSHS', **_):
+    def __init__(self, name='OptocraftSHS', **kwargs):
         self._name = name
         self.logger = Logger.of('OptocraftSHS')
         self._sh = None
-        self.TEMP_FOLDER = Path(r"C:\Users\Public\tmp")
+        
+        # Get temp folder from config or use default
+        if 'temp_folder' in kwargs:
+            self.TEMP_FOLDER = Path(kwargs['temp_folder'])
+        else:
+            self.TEMP_FOLDER = Path(r"C:\Users\Public\tmp")
+        
+        # Ensure temp folder exists
+        os.makedirs(self.TEMP_FOLDER, exist_ok=True)
 
         # Try to connect to SHSWorks
         try:
@@ -61,8 +69,9 @@ class OptocraftSHS(AbstractInterferometer):
             self._sh.grab_org()
             try:
                 self._sh.evaluation()
-            except Exception:
-                self.logger.warning("Evaluation failed, continuing anyway")
+            except Exception as e:
+                # Ensure we're using warn not warning
+                self.logger.warn(f"Evaluation failed, continuing anyway: {str(e)}")
                 
             self._sh.select_field(self.CORRECTED_WAVEFRONT_FIELD)
             self._sh.save_file(temp_file, "ORG")
@@ -86,16 +95,20 @@ class OptocraftSHS(AbstractInterferometer):
 
     @override
     def acquire_burst(self, how_many=1):
+        self.logger.warn('The acquire_burst method is not implemented yet!')
         raise Exception('To be implemented!')
     
     @override
     def load_burst(self, tn):
+        self.logger.warn('The load_burst method is not implemented yet!')
         raise Exception('To be implemented!')
 
     @override
     def delete_burst(self, tn):
+        self.logger.warn('The delete_burst method is not implemented yet!')
         raise Exception('To be implemented!')
     
     @override
     def list_available_burst(self):
+        self.logger.warn('The list_available_burst method is not implemented yet!')
         raise Exception('To be implemented!')
