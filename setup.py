@@ -3,7 +3,7 @@ import os
 import sys
 from shutil import rmtree
 
-from setuptools import setup, Command
+from setuptools import setup, Command, find_packages
 
 NAME = 'plico-interferometer-server'
 DESCRIPTION = 'interferometer controller with PLICO'
@@ -184,14 +184,7 @@ setup(name=NAME,
       author=AUTHOR,
       license=LICENSE,
       keywords=KEYWORDS,
-      packages=['plico_interferometer_server',
-                'plico_interferometer_server.controller',
-                'plico_interferometer_server.devices',
-                'plico_interferometer_server.i4sight2',
-                'plico_interferometer_server.process_monitor',
-                'plico_interferometer_server.scripts',
-                'plico_interferometer_server.utils',
-                ],
+      packages=find_packages(),
       entry_points={
           'console_scripts': [
               'plico_interferometer_server_1=plico_interferometer_server.scripts.controller_1:main',
