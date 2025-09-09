@@ -1,3 +1,8 @@
+'''
+Authors
+  - C. Selmi: written in 2021
+'''
+
 import json
 import os
 import h5py
