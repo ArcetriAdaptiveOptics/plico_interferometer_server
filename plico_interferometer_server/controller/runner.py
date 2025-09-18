@@ -33,6 +33,8 @@ class Runner(BaseRunner):
             self._createPhaseCam4020(interferometerDeviceSection)
         elif interferometerModel in ['phase_cam_6110', 'AccuFiz', 'phase_cam_WCF']:
             self._createPhaseCamWCF(interferometerDeviceSection)
+        elif interferometerModel == 'optocraft_shs_works':
+            self._createOptocraftSHS(interferometerDeviceSection)
         else:
             raise KeyError('Unsupported interferometer model %s' %
                            interferometerModel)
@@ -85,6 +87,11 @@ class Runner(BaseRunner):
         self._interferometer = WCFInterfacer(ipaddr4D, port4D,
                                              burst_folder_name_4D_PC,
                                              name=name)
+
+    def _createOptocraftSHS(self, interferometerDeviceSection):
+        from plico_interferometer_server.devices.shsworks import OptocraftSHS
+        name = self.configuration.deviceName(interferometerDeviceSection)
+        self._interferometer = OptocraftSHS(name=name)
 
     def _replyPort(self):
         return self.configuration.replyPort(self.getConfigurationSection())

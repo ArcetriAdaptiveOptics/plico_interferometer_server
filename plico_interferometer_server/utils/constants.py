@@ -12,4 +12,4 @@ class Constants:
     START_PROCESS_NAME = 'plico_interferometer_start'
     STOP_PROCESS_NAME = 'plico_interferometer_stop'
     KILL_ALL_PROCESS_NAME = 'plico_interferometer_kill_all'
-    SERVER_PROCESS_NAME = 'plico_interferometer_server'
+    SERVER_PROCESS_NAME = 'plico_interferometer_server_1'
