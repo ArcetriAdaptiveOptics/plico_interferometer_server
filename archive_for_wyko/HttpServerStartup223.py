@@ -7,7 +7,7 @@
 import sys
 sys.path.append('C:\\Program Files\\4Sight2.23\\scripts\\site-packages')
 
-from i4sight2 import HttpServer
+from i4sight223 import HttpServer
 wyko_http_server = HttpServer.Server(port=8011)
 
 print('Starting I4D HTTP Server...')
